@@ -33,17 +33,17 @@ public class Reservation {
         long diff = checkOut.getTime() - checkIn.getTime(); // pega a diferença em milisegundos do checkin e checkout, ou seja o dia q chegou e o dia que vai sair.
         return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
     }
-    public String updateDates(Date checkIn, Date checkOut){ // passa uma data pra atualizar e atualiza a do obejto, o this.checkin é do obj e o checkIn é o valor passado.
+    public void updateDates(Date checkIn, Date checkOut){ // passa uma data pra atualizar e atualiza a do obejto, o this.checkin é do obj e o checkIn é o valor passado.
         Date now = new Date();
-        if(checkIn.before(now) || checkOut.before(now)){
-            return "Error in reserve! Reservation dates must be future dates!";
+        if(checkIn.before(now) || checkOut.before(now)){// verifica com a hr atual do pc 
+            throw new IllegalArgumentException("Error in reserve! Reservation dates must be future dates!");
         }
         if(!checkOut.after(checkIn)){
-           return "Check-out date must be after check-in date!";
+            throw new IllegalArgumentException("Check-out date must be after check-in date!");
         }
         this.checkIn = checkIn;
         this.checkOut = checkOut;
-        return null;
+        
     }
     
     @Override
