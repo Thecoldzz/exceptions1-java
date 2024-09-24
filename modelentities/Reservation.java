@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import excecoes.exemplo02.modelentities.exceptions.DomainException;
+
 public class Reservation {
     private Integer roomNumber;
     private Date checkIn;
@@ -12,7 +14,10 @@ public class Reservation {
 
     public Reservation(){
     }
-    public Reservation(Integer roomNumber, Date checkIn, Date checkOut) {
+    public Reservation(Integer roomNumber, Date checkIn, Date checkOut)throws DomainException {
+        if(!checkOut.after(checkIn)){
+            throw new DomainException("Check-out date must be after check-in date!");
+        }
         this.roomNumber = roomNumber;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
@@ -33,13 +38,13 @@ public class Reservation {
         long diff = checkOut.getTime() - checkIn.getTime(); // pega a diferença em milisegundos do checkin e checkout, ou seja o dia q chegou e o dia que vai sair.
         return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
     }
-    public void updateDates(Date checkIn, Date checkOut){ // passa uma data pra atualizar e atualiza a do obejto, o this.checkin é do obj e o checkIn é o valor passado.
+    public void updateDates(Date checkIn, Date checkOut) throws DomainException{ // passa uma data pra atualizar e atualiza a do obejto, o this.checkin é do obj e o checkIn é o valor passado.
         Date now = new Date();
         if(checkIn.before(now) || checkOut.before(now)){// verifica com a hr atual do pc 
-            throw new IllegalArgumentException("Error in reserve! Reservation dates must be future dates!");
+            throw new DomainException("Error in reserve! Reservation dates must be future dates!");
         }
         if(!checkOut.after(checkIn)){
-            throw new IllegalArgumentException("Check-out date must be after check-in date!");
+            throw new DomainException("Check-out date must be after check-in date!");
         }
         this.checkIn = checkIn;
         this.checkOut = checkOut;
